@@ -1,20 +1,32 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const cors = require('cors');
 
-const port = 3010;
 
-// routes
 
-app.get('/', (req, res) => {
-    res.send ('hello miss galant')
-})
+const setupController = require('./controllers/setupController');
+const apiController = require('./controllers/apiController');
 
-mongoose.connect('mongodb+srv://ayeshagalantsafety:7H2LWQ6U0NiYcHwh@cluster0.gjryjma.mongodb.net/To-doAPI?retryWrites=true&w=majority')
-  .then(() => {
-    console.log('Connected!');
-});
+const database = module.exports = () => {
+    try {
+        mongoose.connect('mongodb+srv://ayeshagalantsafety:7H2LWQ6U0NiYcHwh@cluster0.gjryjma.mongodb.net/to_do?retryWrites=true&w=majority',
+        );
+        console.log('Database connected successfully!')
+    } catch (error) {
+        console.log(error)
+        console.log('Unable to connect db')
+    }
+}
 
-app.listen(3010, () => {
-    console.log('app is listening');
-});
+database();
+
+setupController(app);
+
+apiController(app);
+
+const port = process.env.PORT || 3010;
+
+app.listen(port, () => {
+        console.log('Server is up!')
+    })
